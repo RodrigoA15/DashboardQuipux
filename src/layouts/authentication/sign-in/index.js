@@ -1,33 +1,9 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
-import Switch from "@mui/material/Switch";
-import Grid from "@mui/material/Grid";
-import MuiLink from "@mui/material/Link";
-
-// @mui icons
-import FacebookIcon from "@mui/icons-material/Facebook";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import GoogleIcon from "@mui/icons-material/Google";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -43,27 +19,15 @@ import bgImage from "assets/images/cristiiano.webp";
 import axios from "axios";
 
 function Basic() {
-  const [rememberMe, setRememberMe] = useState(false);
-  const [ID_USUARIO_QX, set_ID_USUARIO_QX] = useState("");
-  const [CLAVE, set_CLAVE] = useState("");
+  const [id, setId] = useState("");
+  const [pwd, setPwd] = useState("");
 
-  const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const login = async () => {
+    const res = await axios.get(`http://192.168.28.3/json/ValidacionIntranet.aspx?id=${id}&pwd=${pwd}`);
 
-  const handlelogin = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post("http://127.0.0.1:3500/api/sigin", {
-        ID_USUARIO_QX,
-        CLAVE,
-      });
-
-      const token = response.data.token;
-      localStorage.setItem("token", token);
-
-      set_ID_USUARIO_QX("");
-      set_CLAVE("");
-    } catch (error) {}
+    if(res.status.success){
+      
+    }
   };
 
   return (
@@ -85,22 +49,25 @@ function Basic() {
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form" onSubmit={handlelogin}>
+          <MDBox component="form" role="form">
             <MDBox mb={2}>
               <MDInput
-                type="number"
+                type="text"
                 label="Numero de identificacion"
-                value={ID_USUARIO_QX}
-                onChange={(e) => set_ID_USUARIO_QX(e.target.value)}
+                value={id}
+                onChange={(e) => setId(e.target.value)}
                 fullWidth
+                required
               />
             </MDBox>
+
             <MDBox mb={2}>
               <MDInput
+                required
                 type="password"
                 label="Password"
-                value={CLAVE}
-                onChange={(e) => set_CLAVE(e.target.value)}
+                value={pwd}
+                onChange={(e) => setPwd(e.target.value)}
                 fullWidth
               />
             </MDBox>
