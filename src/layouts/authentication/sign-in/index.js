@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // react-router-dom components
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -17,16 +17,46 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 // Images
 import bgImage from "assets/images/cristiiano.webp";
 import axios from "axios";
+import { show_alert } from "functions";
 
 function Basic() {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const login = async () => {
-    const res = await axios.get(`http://192.168.28.3/json/ValidacionIntranet.aspx?id=${id}&pwd=${pwd}`);
+  const login = async (e) => {
+    e.preventDefault();
 
-    if(res.status.success){
-      
+    try {
+      const response = await fetch(
+        "http://192.168.28.3/json/ValidacionIntranet.aspx?id=" + id + "&pwd=" + pwd,
+        {
+          method: "POST",
+        }
+      );
+      const respuesta = await response.json();
+      console.log(respuesta);
+      console.log(respuesta[0].USUARIO);
+      console.log(respuesta[0].ROL);
+
+      if (id && pwd) {
+        if (respuesta[0].USUARIO === "ADM.RODRIGOPAPAMIJA" && respuesta[0].ROL === "001") {
+          show_alert("Inicio de sesion como admin", "success");
+          navigate("/tables");
+        } else {
+          navigate("/dashboard");
+          show_alert("Inicio de sesion como User", "success");
+        }
+      } else {
+        show_alert("Credenciales incorrectas");
+        console.log("Credenciales incorrectas");
+        navigate("/");
+      }
+
+      console.log(response);
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -49,7 +79,7 @@ function Basic() {
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
-          <MDBox component="form" role="form">
+          <MDBox component="form" role="form" onSubmit={login}>
             <MDBox mb={2}>
               <MDInput
                 type="text"
