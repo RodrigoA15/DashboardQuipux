@@ -40,18 +40,18 @@ function Basic() {
       console.log(respuesta[0].USUARIO);
       console.log(respuesta[0].ROL);
 
-      if (id && pwd) {
+      if (respuesta[0].USUARIO != "NULL" && respuesta[0].ROL != "NULL") {
         if (respuesta[0].USUARIO === "ADM.RODRIGOPAPAMIJA" && respuesta[0].ROL === "001") {
           show_alert("Inicio de sesion como admin", "success");
           navigate("/tables");
+          console.log("Inicio de sesion");
         } else {
+          show_alert("Inicio de sesion como usuario", "success");
           navigate("/dashboard");
-          show_alert("Inicio de sesion como User", "success");
+          console.log("Inicio de sesion");
         }
       } else {
-        show_alert("Credenciales incorrectas");
-        console.log("Credenciales incorrectas");
-        navigate("/");
+        show_alert("Usuario o contraseña incorrectos", "error");
       }
 
       console.log(response);
