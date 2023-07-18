@@ -19,7 +19,7 @@ import bgImage from "assets/images/cristiiano.webp";
 import axios from "axios";
 import { show_alert } from "functions";
 
-function Basic() {
+function Login() {
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
   const [error, setError] = useState("");
@@ -44,17 +44,20 @@ function Basic() {
         if (respuesta[0].USUARIO === "ADM.RODRIGOPAPAMIJA" && respuesta[0].ROL === "001") {
           show_alert("Inicio de sesion como admin", "success");
           navigate("/tables");
+          localStorage.setItem("usuario", "admin");
           console.log("Inicio de sesion");
         } else {
           show_alert("Inicio de sesion como usuario", "success");
           navigate("/dashboard");
+          localStorage.setItem("usuario", "user");
           console.log("Inicio de sesion");
         }
+        localStorage.setItem("user", respuesta[0].USUARIO);
+        localStorage.setItem("rol", respuesta[0].ROL);
+        localStorage.setItem("logueado", true);
       } else {
         show_alert("Usuario o contraseña incorrectos", "error");
       }
-
-      console.log(response);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -129,4 +132,4 @@ function Basic() {
   );
 }
 
-export default Basic;
+export default Login;

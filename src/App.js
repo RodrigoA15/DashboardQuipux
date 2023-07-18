@@ -46,6 +46,13 @@ import createCache from "@emotion/cache";
 
 // Material Dashboard 2 React routes
 import routes from "routes";
+import Dashboard from "layouts/dashboard";
+import Morosos from "layouts/morosos";
+import Lic_conduccion from "layouts/lic_conduccion";
+import Direcciones from "layouts/direcciones";
+import Profile from "layouts/profile";
+import SignIn from "layouts/authentication/sign-in";
+import SignUp from "layouts/authentication/sign-up";
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
@@ -53,6 +60,7 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/QXlogo.png";
 import brandDark from "assets/images/logo-ct-dark.png";
+import { ProtectedAdmin } from "../src/components/ProtectedRoutes/index";
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -166,8 +174,15 @@ export default function App() {
       {layout === "vr" && <Configurator />}
 
       <Routes>
+        <Route element={<ProtectedAdmin />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/tables" element={<Morosos />} />
+          <Route path="/billing" element={<Lic_conduccion />} />
+          <Route path="/notifications" element={<Direcciones />} />
+        </Route>
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="/authentication/sign-in" element={<SignIn />} />
       </Routes>
     </ThemeProvider>
   );
