@@ -15,6 +15,7 @@ import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
 import { show_alert } from "../../functions";
 import Footer from "examples/Footer";
+import Search from "./search";
 
 function Tables() {
   const [post, setpost] = React.useState([]);
@@ -27,7 +28,6 @@ function Tables() {
   const [fecha_pago, setFecha_pago] = React.useState("");
   const [check1, setCheck1] = React.useState(true);
   const [check2, setCheck2] = React.useState(true);
-  const [searchTerm, setSearchTerm] = React.useState("");
   const [formattedDate, setFormattedDate] = React.useState("");
   const textareaRef = React.useRef(null);
 
@@ -47,29 +47,6 @@ function Tables() {
     textareaRef.current.value = concatenation;
     console.log("Fecha y hora de la solicitud:", formattedDate);
   }, [formattedDate]);
-
-  const handleInputChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const handleSearch = async () => {
-    if (searchTerm.trim() === "") {
-      show_alert("El término de búsqueda está vacío", "error");
-      return;
-    }
-    try {
-      const response = await axios.get(`http://127.0.0.1:3500/api/compa/${searchTerm}`);
-
-      if (response.data.length > 0) {
-        setpost(response.data);
-      } else {
-        show_alert("No se encontro el comparendo  :(", "error");
-      }
-    } catch (error) {
-      console.log("Error de servidor", error);
-      show_alert("error de servidor", "error");
-    }
-  };
 
   //Muestra la fecha en la cual se hizo la actualizacion
   const handlePutRequest = async () => {
@@ -117,8 +94,6 @@ function Tables() {
     if (!NRO_COMPARENDO_MOROSO || NRO_COMPARENDO_MOROSO.trim() === "") {
       show_alert("Escribe el Numero de comparendo", "warning");
     } else if (!id_usuario || id_usuario.trim() === "") {
-      show_alert("Escribe la identifiacion del usuario", "warning");
-    } else if (!searchTerm || searchTerm.trim() === "") {
       show_alert("Escribe la identifiacion del usuario", "warning");
     } else if (!ESTADO_MOROSO || ESTADO_MOROSO.trim() === "") {
       show_alert("Escribe el estado del usuario", "warning");
@@ -204,6 +179,8 @@ function Tables() {
       });
   };
 
+  const user = localStorage.getItem("usuario");
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -227,18 +204,8 @@ function Tables() {
               </MDBox>
 
               <MDBox pt={3}>
-                <div className="containerInput">
-                  <input
-                    className="form-control inputBuscar"
-                    value={searchTerm}
-                    placeholder="Busqueda por Numero de comparendo"
-                    onChange={handleInputChange}
-                  />
-                  <button className="btn btn-success" onClick={handleSearch}>
-                    <Icon>search</Icon>
-                  </button>
-                </div>
-
+                {/* Buscador */}
+                <Search setpost={setpost} />
                 <table className="table border">
                   <thead>
                     <tr>
@@ -260,23 +227,32 @@ function Tables() {
                         <td>{item.OBSERVACION}</td>
 
                         <td>
-                          <button
-                            onClick={() =>
-                              openmodal(
-                                item.NRO_COMPARENDO_MOROSO,
-                                item.ID_USUARIO_MOROSO,
-                                item.ESTADO_MOROSO,
-                                item.FECHA,
-                                item.OBSERVACION
-                              )
-                            }
-                            className="btn btn-warning"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalEdit"
-                            disabled={item.ESTADO_MOROSO === "3"}
-                          >
-                            Editar
-                          </button>
+                          {user === "admin" ? (
+                            <button
+                              onClick={() =>
+                                openmodal(
+                                  item.NRO_COMPARENDO_MOROSO,
+                                  item.ID_USUARIO_MOROSO,
+                                  item.ESTADO_MOROSO,
+                                  item.FECHA,
+                                  item.OBSERVACION
+                                )
+                              }
+                              className="btn btn-warning"
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalEdit"
+                              disabled={item.ESTADO_MOROSO === "3"}
+                            >
+                              Editar
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-success"
+                              disabled={item.ESTADO_MOROSO === "3"}
+                            >
+                              Solicitar
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}

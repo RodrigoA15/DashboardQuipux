@@ -121,7 +121,6 @@ function Billing() {
                     <Icon>search</Icon>
                   </button>
                 </div>
-
                 <table className="table border">
                   <thead>
                     <tr>
@@ -130,7 +129,6 @@ function Billing() {
                       <th scope="col">Fecha Expedicion</th>
                       <th scope="col">Tramite</th>
                       <th scope="col">Poliza</th>
-
                       <th scope="col">Acciones </th>
                     </tr>
                   </thead>
@@ -142,7 +140,6 @@ function Billing() {
                         <td className="table-secondary">{item.FECHA_EXPEDICION}</td>
                         <td>{item.ID_TRAMITE}</td>
                         <td>{item.FECHA_POLIZA}</td>
-
                         <td>
                           <button
                             className="btn btn-danger"
