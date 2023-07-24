@@ -125,7 +125,11 @@ const Grafica = () => {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <MDBox mt={4}>
-            <Line data={chartData} />
+            {chartData.labels && chartData.datasets ? (
+              <Line data={chartData} />
+            ) : (
+              <h1>Cargando...</h1>
+            )}
           </MDBox>
         </Grid>
       </Grid>

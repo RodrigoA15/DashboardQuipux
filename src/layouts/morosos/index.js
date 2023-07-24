@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import { show_alert } from "../../functions";
 import Footer from "examples/Footer";
 import Search from "./search";
+import User from "./users";
 
 function Tables() {
   const [post, setpost] = React.useState([]);
@@ -30,11 +31,17 @@ function Tables() {
   const [check2, setCheck2] = React.useState(true);
   const [formattedDate, setFormattedDate] = React.useState("");
   const textareaRef = React.useRef(null);
+  const currentDate = new Date();
+  const minDate = new Date(
+    currentDate.getFullYear() - 5,
+    currentDate.getMonth() - 1,
+    currentDate.getDate()
+  );
 
   React.useEffect(() => {
     const concatenation =
       "usuario: " +
-      "5415641" +
+      usuario +
       " Modificó el estado moroso del Comparendo No: " +
       NRO_COMPARENDO_MOROSO +
       " Con número de Factura: " +
@@ -128,6 +135,7 @@ function Tables() {
     handlePutRequest();
     validar();
   };
+  const usuario = localStorage.getItem("user");
   /////////////////////////////////// Metodo put
   const updateCompa = async () => {
     const MySwal = withReactContent(Swal);
@@ -143,7 +151,7 @@ function Tables() {
           if (result.isConfirmed) {
             const updatedObservacion =
               "usuario: " +
-              "5415641" +
+              usuario +
               " Modificó el estado moroso del Comparendo No: " +
               NRO_COMPARENDO_MOROSO +
               " Con número de Factura: " +
@@ -367,6 +375,7 @@ function Tables() {
                             className="form-control"
                             value={fecha_pago}
                             onChange={handleDateChange}
+                            max={minDate.toISOString().split("T")[0]}
                           />
                         </div>
                       </div>
