@@ -16,14 +16,19 @@ import Swal from "sweetalert2";
 import { show_alert } from "../../functions";
 import Footer from "examples/Footer";
 import Search from "./search";
-import User from "./users";
+import { arrayOf, element } from "prop-types";
+import { useState } from "react";
+import { Button, Stack } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import Pendientes from "../solicitud/pendientes";
 
 function Tables() {
+  const [FECHA_COMPARENDO, setFECHA_COMPARENDO] = useState("");
+  const [ID_USUARIO_MOROSO, setID_USUARIO_MOROSO] = useState("");
+  const [ESTADO, setESTADO] = useState("");
   const [post, setpost] = React.useState([]);
   const [NRO_COMPARENDO_MOROSO, setNroComparendo] = React.useState("");
-  const [id_usuario, setId_usuario] = React.useState("");
   const [ESTADO_MOROSO, setEstado] = React.useState("");
-  const [FECHA, setFecha_COMPARENDO] = React.useState("");
   const [OBSERVACION, setOBSERVACION] = React.useState("");
   const [factura, setFactura] = React.useState("");
   const [fecha_pago, setFecha_pago] = React.useState("");
@@ -37,23 +42,6 @@ function Tables() {
     currentDate.getMonth() - 1,
     currentDate.getDate()
   );
-
-  React.useEffect(() => {
-    const concatenation =
-      "usuario: " +
-      usuario +
-      " Modificó el estado moroso del Comparendo No: " +
-      NRO_COMPARENDO_MOROSO +
-      " Con número de Factura: " +
-      factura +
-      " Con fecha de pago: " +
-      fecha_pago +
-      " Fecha de modificacion: " +
-      formattedDate;
-
-    textareaRef.current.value = concatenation;
-    console.log("Fecha y hora de la solicitud:", formattedDate);
-  }, [formattedDate]);
 
   //Muestra la fecha en la cual se hizo la actualizacion
   const handlePutRequest = async () => {
@@ -87,12 +75,18 @@ function Tables() {
     }
   };
 
-  const openmodal = (NRO_COMPARENDO_MOROSO, id_usuario, ESTADO_MOROSO, FECHA, OBSERVACION) => {
+  const openmodal = (
+    NRO_COMPARENDO_MOROSO,
+    ID_USUARIO_MOROSO,
+    ESTADO_MOROSO,
+    FECHA_COMPARENDO,
+    OBSERVACION
+  ) => {
     setNroComparendo(NRO_COMPARENDO_MOROSO);
-    setId_usuario(id_usuario);
+    setID_USUARIO_MOROSO(ID_USUARIO_MOROSO);
     setEstado(ESTADO_MOROSO);
     // const formato_fecha = new Date(FECHA).toLocaleDateString();
-    setFecha_COMPARENDO(FECHA);
+    setFECHA_COMPARENDO(FECHA_COMPARENDO);
     setOBSERVACION(OBSERVACION);
   };
   //////////////////Validacion de campos
@@ -100,7 +94,7 @@ function Tables() {
     const MySwal = withReactContent(Swal);
     if (!NRO_COMPARENDO_MOROSO || NRO_COMPARENDO_MOROSO.trim() === "") {
       show_alert("Escribe el Numero de comparendo", "warning");
-    } else if (!id_usuario || id_usuario.trim() === "") {
+    } else if (!ID_USUARIO_MOROSO || ID_USUARIO_MOROSO.trim() === "") {
       show_alert("Escribe la identifiacion del usuario", "warning");
     } else if (!ESTADO_MOROSO || ESTADO_MOROSO.trim() === "") {
       show_alert("Escribe el estado del usuario", "warning");
@@ -115,7 +109,7 @@ function Tables() {
     } else if (!fecha_pago || fecha_pago.trim() === "") {
       show_alert("Escribe la fecha de pago", "warning");
     } else {
-      const fecha_comparendo = new Date(FECHA);
+      const fecha_comparendo = new Date(FECHA_COMPARENDO);
       const fecha2 = new Date(fecha_pago);
 
       if (fecha_comparendo > fecha2) {
@@ -124,16 +118,66 @@ function Tables() {
           text: "La fecha de pago no puede ser inferior a la fecha del comparendo",
           icon: "error",
         });
-      } else {
-        updateCompa();
-        validateDate(fecha_pago);
+
+        return;
       }
+      //  else {
+      //   updateCompa();
+      //   validateDate(fecha_pago);
+      // }
     }
   };
-  //Funciones a ejecutar con el Button
+  //Funciones a ejecutar con el Button de actualizar (admin)
   const handleButtonClick = () => {
+    //Update
     handlePutRequest();
+    //Validaciones
     validar();
+  };
+
+  const buttonnUser = () => {
+    createNotification();
+    validar();
+  };
+  //  Enviar solicitud al Admin
+  const createNotification = async () => {
+    const MySwal = withReactContent(Swal);
+
+    MySwal.fire({
+      title: "¿Esta seguro de enviar la solicitud?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Si Enviar",
+      cancelButtonText: "Cancelar",
+    });
+    try {
+      const response = await axios.post("http://localhost:3500/api/moroso", {
+        NRO_COMPARENDO_MOROSO: NRO_COMPARENDO_MOROSO,
+        ID_USUARIO_MOROSO: ID_USUARIO_MOROSO,
+        ESTADO_MOROSO: ESTADO_MOROSO,
+        FECHA_COMPARENDO: FECHA_COMPARENDO,
+        OBSERVACION:
+          "usuario: " +
+          usuario +
+          " Modificó el estado moroso del Comparendo No: " +
+          NRO_COMPARENDO_MOROSO +
+          " Con número de Factura: " +
+          factura +
+          " Con fecha de pago: " +
+          fecha_pago +
+          " Fecha de modificacion: " +
+          formattedDate,
+        ESTADO: 1,
+      });
+      if (response.data) {
+        show_alert("Solicitud enviada", "success");
+      } else {
+        show_alert("No se pudo enviar la solicitud", "error");
+      }
+    } catch (error) {
+      show_alert("error de servidor", "error");
+      console.log(error);
+    }
   };
   const usuario = localStorage.getItem("user");
   /////////////////////////////////// Metodo put
@@ -188,7 +232,6 @@ function Tables() {
   };
 
   const user = localStorage.getItem("usuario");
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -210,11 +253,11 @@ function Tables() {
                   Morosos
                 </MDTypography>
               </MDBox>
-
               <MDBox pt={3}>
                 {/* Buscador */}
                 <Search setpost={setpost} />
-                <table className="table border">
+                {/* Tabla */}
+                <table className="table border responsive">
                   <thead>
                     <tr>
                       <th scope="col">Numero Comparendo</th>
@@ -249,12 +292,23 @@ function Tables() {
                               className="btn btn-warning"
                               data-bs-toggle="modal"
                               data-bs-target="#modalEdit"
-                              disabled={item.ESTADO_MOROSO === "3"}
+                              disabled={item.ESTADO_MOROSO != "1" && item.ESTADO_MOROSO != "28"}
                             >
                               Editar
                             </button>
                           ) : (
                             <button
+                              onClick={() =>
+                                openmodal(
+                                  item.NRO_COMPARENDO_MOROSO,
+                                  item.ID_USUARIO_MOROSO,
+                                  item.ESTADO_MOROSO,
+                                  item.FECHA,
+                                  item.OBSERVACION
+                                )
+                              }
+                              data-bs-toggle="modal"
+                              data-bs-target="#modalEdit"
                               className="btn btn-success"
                               disabled={item.ESTADO_MOROSO === "3"}
                             >
@@ -268,6 +322,7 @@ function Tables() {
                 </table>
                 {/**************************************************** modal **************************************/}
               </MDBox>
+
               <div id="modalEdit" className="modal fade" aria-hidden="true">
                 <div className="modal-dialog">
                   <div className="modal-content">
@@ -308,7 +363,7 @@ function Tables() {
                           id="identificacionusuario"
                           className="form-control"
                           placeholder="Identificacion Usuario"
-                          value={id_usuario}
+                          value={ID_USUARIO_MOROSO}
                           // onChange={(e) => setId_usuario(e.target.value)}
                         />
                       </div>
@@ -343,7 +398,7 @@ function Tables() {
                             type="text"
                             id="fecha"
                             className="form-control"
-                            value={FECHA}
+                            value={FECHA_COMPARENDO}
                           />
                         </div>
                       </div>
@@ -358,6 +413,18 @@ function Tables() {
                           placeholder="Numero Factura"
                           value={factura}
                           onChange={(e) => setFactura(e.target.value)}
+                        />
+                      </div>
+                      <div className="input-group">
+                        <span className="input-group-text">
+                          <Icon>numbers</Icon>
+                        </span>
+                        <input
+                          type="text"
+                          id="ESTADO"
+                          className="form-control"
+                          placeholder="ESTADO"
+                          value={ESTADO}
                         />
                       </div>
 
@@ -425,13 +492,23 @@ function Tables() {
                       </div>
 
                       <div className="d-grid col-6 mx-auto">
-                        <button
-                          onClick={() => handleButtonClick()}
-                          className="btn btn-success"
-                          disabled={check1 || check2}
-                        >
-                          Guardar Cambios
-                        </button>
+                        {user === "admin" ? (
+                          <button
+                            onClick={() => handleButtonClick()}
+                            className="btn btn-success"
+                            disabled={check1 || check2}
+                          >
+                            Guardar Cambios
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => buttonnUser()}
+                            className="btn btn-success"
+                            disabled={check1 || check2}
+                          >
+                            Enviar
+                          </button>
+                        )}
                       </div>
                       <div className="modal-footer">
                         <button

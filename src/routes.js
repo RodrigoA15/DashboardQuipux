@@ -46,6 +46,7 @@ import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import Solicitud from "layouts/solicitud";
 
 const routes = [
   {
@@ -63,6 +64,14 @@ const routes = [
     icon: <Icon fontSize="small">person</Icon>,
     route: "/tables",
     component: <Morosos />,
+  },
+  {
+    type: "collapse",
+    name: "Solicitudes",
+    key: "solicitud",
+    icon: <Icon fontSize="small">notifications</Icon>,
+    route: "/solicitud",
+    component: <Solicitud />,
   },
   {
     type: "collapse",

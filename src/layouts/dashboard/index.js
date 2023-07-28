@@ -27,10 +27,12 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 import Grafica from "./components/Charts/grafica";
 
 function Dashboard() {
+  const user = localStorage.getItem("user");
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
+        <b>Bienvenido {user}</b>
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>

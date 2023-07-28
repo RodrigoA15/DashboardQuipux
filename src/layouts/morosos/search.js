@@ -3,6 +3,9 @@ import { show_alert } from "functions";
 import { useState } from "react";
 import Icon from "@mui/material/Icon";
 import PropTypes from "prop-types";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
+import { DisabledByDefault } from "@mui/icons-material";
 
 function Search({ setpost }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -12,6 +15,7 @@ function Search({ setpost }) {
   };
 
   const handleSearch = async () => {
+    const MySwal = withReactContent(Swal);
     if (searchTerm === "") {
       show_alert("El termino busqueda no puede estar Vacio", "warning");
       return;
@@ -21,7 +25,17 @@ function Search({ setpost }) {
       const morosos = await axios.get(`http://127.0.0.1:3500/api/compa/${searchTerm}`);
 
       if (morosos.data.length > 0) {
-        setpost(morosos.data);
+        if (
+          morosos.data.some((item) => item.ESTADO_MOROSO === "1" || item.ESTADO_MOROSO === "28")
+        ) {
+          setpost(morosos.data);
+        } else {
+          MySwal.fire({
+            title: "No se puede Actualizar",
+            text: "Este Usuario no cuenta con comparendos para pagar",
+            icon: "warning",
+          });
+        }
       } else {
         show_alert("No se encontro el comparendo  :(", "error");
       }

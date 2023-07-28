@@ -43,7 +43,7 @@ function Login() {
       if (respuesta[0].USUARIO != "NULL" && respuesta[0].ROL != "NULL") {
         if (respuesta[0].USUARIO === "ADM.RODRIGOPAPAMIJA" && respuesta[0].ROL === "001") {
           show_alert("Inicio de sesion como admin", "success");
-          navigate("/tables");
+          navigate("/dashboard");
           localStorage.setItem("usuario", "admin");
           console.log("Inicio de sesion");
         } else {

@@ -61,6 +61,8 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 import brandWhite from "assets/images/QXlogo.png";
 import brandDark from "assets/images/logo-ct-dark.png";
 import ProtectedAdmin from "components/ProtectedRoutes";
+import ProtectedUser from "components/ProtectedRoutes/user";
+import Solicitud from "layouts/solicitud";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -182,7 +184,9 @@ export default function App() {
           <Route path="/notifications" element={<Direcciones />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/solicitud" element={<Solicitud />} />
         </Route>
+
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/dashboard" />} />
       </Routes>
