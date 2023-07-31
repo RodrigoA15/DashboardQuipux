@@ -16,11 +16,7 @@ import Swal from "sweetalert2";
 import { show_alert } from "../../functions";
 import Footer from "examples/Footer";
 import Search from "./search";
-import { arrayOf, element } from "prop-types";
 import { useState } from "react";
-import { Button, Stack } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import Pendientes from "../solicitud/pendientes";
 
 function Tables() {
   const [FECHA_COMPARENDO, setFECHA_COMPARENDO] = useState("");
@@ -35,6 +31,7 @@ function Tables() {
   const [check1, setCheck1] = React.useState(true);
   const [check2, setCheck2] = React.useState(true);
   const [formattedDate, setFormattedDate] = React.useState("");
+
   const textareaRef = React.useRef(null);
   const currentDate = new Date();
   const minDate = new Date(
@@ -119,12 +116,10 @@ function Tables() {
           icon: "error",
         });
 
-        return;
+        return false;
+      } else {
+        return true;
       }
-      //  else {
-      //   updateCompa();
-      //   validateDate(fecha_pago);
-      // }
     }
   };
   //Funciones a ejecutar con el Button de actualizar (admin)
@@ -135,21 +130,15 @@ function Tables() {
     validar();
   };
 
-  const buttonnUser = () => {
-    createNotification();
-    validar();
+  const buttonnUser = async () => {
+    const validacion = await validar();
+
+    if (validacion) {
+      createNotification();
+    }
   };
   //  Enviar solicitud al Admin
   const createNotification = async () => {
-    const MySwal = withReactContent(Swal);
-
-    MySwal.fire({
-      title: "¿Esta seguro de enviar la solicitud?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Si Enviar",
-      cancelButtonText: "Cancelar",
-    });
     try {
       const response = await axios.post("http://localhost:3500/api/moroso", {
         NRO_COMPARENDO_MOROSO: NRO_COMPARENDO_MOROSO,
@@ -159,7 +148,7 @@ function Tables() {
         OBSERVACION:
           "usuario: " +
           usuario +
-          " Modificó el estado moroso del Comparendo No: " +
+          " Envio una solicitud de actualizacion de  estado moroso del Comparendo No: " +
           NRO_COMPARENDO_MOROSO +
           " Con número de Factura: " +
           factura +
@@ -169,6 +158,7 @@ function Tables() {
           formattedDate,
         ESTADO: 1,
       });
+
       if (response.data) {
         show_alert("Solicitud enviada", "success");
       } else {
@@ -179,7 +169,7 @@ function Tables() {
       console.log(error);
     }
   };
-  const usuario = localStorage.getItem("user");
+
   /////////////////////////////////// Metodo put
   const updateCompa = async () => {
     const MySwal = withReactContent(Swal);
@@ -210,9 +200,12 @@ function Tables() {
               ESTADO_MOROSO: ESTADO_MOROSO,
               OBSERVACION: updatedObservacion,
             };
-            axios.put(`http://127.0.0.1:3500/api/compa/${NRO_COMPARENDO_MOROSO}`, data);
+            const sapa = axios.put(
+              `http://127.0.0.1:3500/api/compa/${NRO_COMPARENDO_MOROSO}`,
+              data
+            );
             console.log("siuaaaaaaaaaaaa", setOBSERVACION);
-            console.log(data);
+            console.log(sapa);
             MySwal.fire({
               title: "Estado Actualizado correctamente",
               icon: "success",
@@ -232,6 +225,7 @@ function Tables() {
   };
 
   const user = localStorage.getItem("usuario");
+  const usuario = localStorage.getItem("user");
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -413,18 +407,6 @@ function Tables() {
                           placeholder="Numero Factura"
                           value={factura}
                           onChange={(e) => setFactura(e.target.value)}
-                        />
-                      </div>
-                      <div className="input-group">
-                        <span className="input-group-text">
-                          <Icon>numbers</Icon>
-                        </span>
-                        <input
-                          type="text"
-                          id="ESTADO"
-                          className="form-control"
-                          placeholder="ESTADO"
-                          value={ESTADO}
                         />
                       </div>
 

@@ -18,7 +18,6 @@ import PropTypes from "prop-types";
 
 // @mui material components
 import Link from "@mui/material/Link";
-import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
@@ -26,10 +25,32 @@ import MDTypography from "components/MDTypography";
 
 // Material Dashboard 2 React base styles
 import typography from "assets/theme/base/typography";
+import { Button } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Footer({ company, links }) {
   const { href, name } = company;
   const { size } = typography;
+  const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  const removeData = (e) => {
+    if (localStorage.getItem("usuario")) {
+      localStorage.removeItem("usuario");
+    }
+    if (localStorage.getItem("user")) {
+      localStorage.removeItem("user");
+    }
+    if (localStorage.getItem("rol")) {
+      localStorage.removeItem("rol");
+    }
+    if (localStorage.getItem("logueado")) {
+      localStorage.removeItem("logueado");
+    }
+    setLoggedIn(false);
+    // window.location.reload();
+  };
 
   return (
     <MDBox
@@ -50,14 +71,22 @@ function Footer({ company, links }) {
         px={1.5}
       >
         &copy; {new Date().getFullYear()}, Movit
-        <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}></MDBox>-
+        <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}></MDBox>
         <Link href={href} target="_blank">
           <MDTypography variant="button" fontWeight="medium">
             &nbsp;{name}&nbsp;
           </MDTypography>
         </Link>
         Popayán, Carrera 2 con Calle 25 Norte
+        {loggedIn ? (
+          <Button onClick={removeData} variant="text">
+            Cerrar Sesión
+          </Button>
+        ) : (
+          navigate("/authentication/sign-in")
+        )}
       </MDBox>
+
       <MDBox
         component="ul"
         sx={({ breakpoints }) => ({
