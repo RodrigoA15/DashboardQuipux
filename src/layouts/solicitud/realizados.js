@@ -58,10 +58,10 @@ export default function Realizados({ datos }) {
             {realizado.map((row) => (
               <TableRow key={row._id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell component="th" scope="row">
-                  {row.NRO_COMPARENDO_MOROSOS}
+                  {row.NRO_COMPARENDO_MOROSO}
                 </TableCell>
                 <TableCell align="center">{row.ID_USUARIO_MOROSO}</TableCell>
-                <TableCell align="center">{row.ESTADO_COMPARENDO}</TableCell>
+                <TableCell align="center">{row.ESTADO_MOROSO}</TableCell>
                 <TableCell align="center">{row.FECHA_COMPARENDO}</TableCell>
                 <TableCell align="center">{row.FECHA_PAGO}</TableCell>
                 <TableCell align="center">{row.OBSERVACIONES}</TableCell>

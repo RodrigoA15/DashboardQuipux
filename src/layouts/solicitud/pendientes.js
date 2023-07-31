@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 //import AbcIcon from "@mui/icons-material/Abc";
 
 export default function Pendientes() {
@@ -25,6 +27,7 @@ export default function Pendientes() {
   const [OBSERVACION, setOBSERVACION] = useState("");
   const [check1, setCheck1] = useState(true);
   const [check2, setCheck2] = useState(true);
+  const [dataCount, setDataCount] = useState(0);
 
   useEffect(() => {
     getall();
@@ -50,6 +53,8 @@ export default function Pendientes() {
     try {
       const response = await axios.get("http://localhost:3500/api/state");
       const data = response.data;
+      const count = response.data.length;
+      setDataCount(count);
       setPendiente(data);
       console.log(response.data[0]._id);
     } catch (error) {
@@ -69,10 +74,72 @@ export default function Pendientes() {
       console.log("algo malo", error);
     }
   };
+  const usuario = localStorage.getItem("user");
+  const updateCompa = async () => {
+    // Verificar que todas las variables necesarias estén definidas
+
+    const MySwal = withReactContent(Swal);
+    try {
+      const result = await MySwal.fire({
+        title: "¿Está seguro de modificar el estado?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Si, modificar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (result.isConfirmed) {
+        const updatedObservacion =
+          "usuario: " +
+          usuario +
+          " Modificó el estado moroso del Comparendo No: " +
+          NRO_COMPARENDO_MOROSO;
+        // " Con número de Factura: " +
+        // factura +
+        // " Con fecha de pago: " +
+        // fecha_pago;
+
+        setOBSERVACION(updatedObservacion);
+        const data = {
+          ESTADO_MOROSO: ESTADO_MOROSO,
+          OBSERVACION: updatedObservacion,
+        };
+
+        const sapa = await axios.put(
+          `http://127.0.0.1:3500/api/compa/${NRO_COMPARENDO_MOROSO}`,
+          data
+        );
+
+        // Verificar que la respuesta sea exitosa antes de mostrar el mensaje de éxito
+        if (sapa && sapa.status === 200) {
+          console.log("siuaaaaaaaaaaaa", setOBSERVACION);
+          console.log(sapa);
+          updateState();
+          MySwal.fire({
+            title: "Estado Actualizado correctamente",
+            icon: "success",
+          });
+        } else {
+          throw new Error("Error en la solicitud de actualización.");
+        }
+      }
+    } catch (error) {
+      console.log("error al enviar la solicitud: ", error);
+      MySwal.fire({
+        title: "Error al actualizar el estado",
+        icon: "error",
+      });
+    }
+  };
+
+  const handleButtonClick = () => {
+    updateCompa();
+  };
 
   return (
     <div>
       <h2>Componente Hijo</h2>
+      <p>Notificacion pendientes: {dataCount}</p>
       <TableContainer component={Paper} sx={{ border: 1 }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableRow>
@@ -234,14 +301,7 @@ export default function Pendientes() {
                   <span className="input-group-text">
                     <Icon>calendar_today</Icon>
                   </span>
-                  <input
-                    type="date"
-                    id="fecha"
-                    className="form-control"
-                    // value={fecha_pago}
-                    // onChange={handleDateChange}
-                    // max={minDate.toISOString().split("T")[0]}
-                  />
+                  <input type="date" id="fecha" className="form-control" />
                 </div>
               </div>
 
@@ -291,7 +351,7 @@ export default function Pendientes() {
 
               <div className="d-grid col-6 mx-auto">
                 <button
-                  onClick={() => updateState()}
+                  onClick={() => handleButtonClick()}
                   className="btn btn-success"
                   disabled={check1 || check2}
                 >
