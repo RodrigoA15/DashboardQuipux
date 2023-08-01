@@ -24,6 +24,8 @@ export default function Pendientes() {
   const [ID_USUARIO_MOROSO, setID_USUARIO_MOROSO] = useState("");
   const [ESTADO_MOROSO, setESTADO_MOROSO] = useState("");
   const [FECHA_COMPARENDO, setFECHACOMPARENDO] = useState("");
+  const [NRO_FACTURA, setFACTURA] = useState("");
+  const [FECHA_PAGO, setFecha_pago] = useState("");
   const [OBSERVACION, setOBSERVACION] = useState("");
   const [check1, setCheck1] = useState(true);
   const [check2, setCheck2] = useState(true);
@@ -39,6 +41,8 @@ export default function Pendientes() {
     ID_USUARIO_MOROSO,
     ESTADO_MOROSO,
     FECHA_COMPARENDO,
+    NRO_FACTURA,
+    FECHA_PAGO,
     OBSERVACION
   ) => {
     setId_moroso(_id);
@@ -46,6 +50,8 @@ export default function Pendientes() {
     setID_USUARIO_MOROSO(ID_USUARIO_MOROSO);
     setESTADO_MOROSO(ESTADO_MOROSO);
     setFECHACOMPARENDO(FECHA_COMPARENDO);
+    setFecha_pago(FECHA_PAGO);
+    setFACTURA(NRO_FACTURA);
     setOBSERVACION(OBSERVACION);
   };
 
@@ -93,11 +99,11 @@ export default function Pendientes() {
           "usuario: " +
           usuario +
           " Modificó el estado moroso del Comparendo No: " +
-          NRO_COMPARENDO_MOROSO;
-        // " Con número de Factura: " +
-        // factura +
-        // " Con fecha de pago: " +
-        // fecha_pago;
+          NRO_COMPARENDO_MOROSO +
+          " Con número de Factura: " +
+          NRO_FACTURA +
+          " Con fecha de pago: " +
+          FECHA_PAGO;
 
         setOBSERVACION(updatedObservacion);
         const data = {
@@ -156,6 +162,12 @@ export default function Pendientes() {
               <b>FECHA_COMPARENDO</b>
             </TableCell>
             <TableCell>
+              <b>NRO_FACTURA</b>
+            </TableCell>
+            <TableCell>
+              <b>FECHA_PAGO</b>
+            </TableCell>
+            <TableCell>
               <b>OBSERVACIONES</b>
             </TableCell>
             <TableCell>
@@ -172,6 +184,8 @@ export default function Pendientes() {
                 <TableCell align="center">{row.ID_USUARIO_MOROSO}</TableCell>
                 <TableCell align="center">{row.ESTADO_MOROSO}</TableCell>
                 <TableCell align="center">{row.FECHA_COMPARENDO}</TableCell>
+                <TableCell align="center">{row.NRO_FACTURA}</TableCell>
+                <TableCell align="center">{row.FECHA_PAGO}</TableCell>
                 <TableCell align="center">{row.OBSERVACION}</TableCell>
 
                 <TableCell align="center">
@@ -183,6 +197,8 @@ export default function Pendientes() {
                         row.ID_USUARIO_MOROSO,
                         row.ESTADO_MOROSO,
                         row.FECHA_COMPARENDO,
+                        row.NRO_FACTURA,
+                        row.FECHA_PAGO,
                         row.OBSERVACION
                       )
                     }
@@ -286,22 +302,28 @@ export default function Pendientes() {
                 <input
                   type="text"
                   id="factura"
+                  disabled={true}
                   className="form-control"
-                  placeholder="Numero Factura"
-                  //value={factura}
-                  onChange={(e) => setFactura(e.target.value)}
+                  value={NRO_FACTURA}
+                  onChange={(e) => setFACTURA(e.target.value)}
                 />
               </div>
 
-              <div className="form-group">
-                <label className="h6" htmlFor="fecha">
-                  Fecha de pago
+              <div className="input-group mb-3">
+                <label className="h6" htmlFor="fecha_comparendo">
+                  Fecha Pago
                 </label>
                 <div className="input-group">
                   <span className="input-group-text">
                     <Icon>calendar_today</Icon>
                   </span>
-                  <input type="date" id="fecha" className="form-control" />
+                  <input
+                    disabled={true}
+                    type="text"
+                    id="fecha_pago"
+                    className="form-control"
+                    value={FECHA_PAGO}
+                  />
                 </div>
               </div>
 

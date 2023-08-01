@@ -53,7 +53,7 @@ function Search({ setpost }) {
         placeholder="Busqueda por Numero de comparendo"
         onChange={handleInputChange}
       />
-      <button className="btn btn-success" onClick={handleSearch}>
+      <button name="search" className="btn btn-success" onClick={handleSearch}>
         <Icon>search</Icon>
       </button>
     </div>

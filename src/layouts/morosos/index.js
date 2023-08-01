@@ -16,23 +16,22 @@ import Swal from "sweetalert2";
 import { show_alert } from "../../functions";
 import Footer from "examples/Footer";
 import Search from "./search";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 function Tables() {
   const [FECHA_COMPARENDO, setFECHA_COMPARENDO] = useState("");
   const [ID_USUARIO_MOROSO, setID_USUARIO_MOROSO] = useState("");
-  const [ESTADO, setESTADO] = useState("");
-  const [post, setpost] = React.useState([]);
-  const [NRO_COMPARENDO_MOROSO, setNroComparendo] = React.useState("");
-  const [ESTADO_MOROSO, setEstado] = React.useState("");
-  const [OBSERVACION, setOBSERVACION] = React.useState("");
-  const [factura, setFactura] = React.useState("");
-  const [fecha_pago, setFecha_pago] = React.useState("");
-  const [check1, setCheck1] = React.useState(true);
-  const [check2, setCheck2] = React.useState(true);
-  const [formattedDate, setFormattedDate] = React.useState("");
+  const [post, setpost] = useState([]);
+  const [NRO_COMPARENDO_MOROSO, setNroComparendo] = useState("");
+  const [ESTADO_MOROSO, setEstado] = useState("");
+  const [OBSERVACION, setOBSERVACION] = useState("");
+  const [NRO_FACTURA, setFactura] = useState("");
+  const [FECHA_PAGO, setFecha_pago] = useState("");
+  const [check1, setCheck1] = useState(true);
+  const [check2, setCheck2] = useState(true);
+  const [formattedDate, setFormattedDate] = useState("");
 
-  const textareaRef = React.useRef(null);
+  const textareaRef = useRef(null);
   const currentDate = new Date();
   const minDate = new Date(
     currentDate.getFullYear() - 5,
@@ -82,7 +81,6 @@ function Tables() {
     setNroComparendo(NRO_COMPARENDO_MOROSO);
     setID_USUARIO_MOROSO(ID_USUARIO_MOROSO);
     setEstado(ESTADO_MOROSO);
-    // const formato_fecha = new Date(FECHA).toLocaleDateString();
     setFECHA_COMPARENDO(FECHA_COMPARENDO);
     setOBSERVACION(OBSERVACION);
   };
@@ -101,13 +99,13 @@ function Tables() {
         text: "Recuerda que solo puedes actualizar un comparendo a estado pagado  (3)",
         icon: "error",
       });
-    } else if (!factura || factura.trim() === "") {
+    } else if (!NRO_FACTURA || NRO_FACTURA.trim() === "") {
       show_alert("Escribe Factura", "warning");
-    } else if (!fecha_pago || fecha_pago.trim() === "") {
+    } else if (!FECHA_PAGO || FECHA_PAGO.trim() === "") {
       show_alert("Escribe la fecha de pago", "warning");
     } else {
       const fecha_comparendo = new Date(FECHA_COMPARENDO);
-      const fecha2 = new Date(fecha_pago);
+      const fecha2 = new Date(FECHA_PAGO);
 
       if (fecha_comparendo > fecha2) {
         MySwal.fire({
@@ -145,15 +143,17 @@ function Tables() {
         ID_USUARIO_MOROSO: ID_USUARIO_MOROSO,
         ESTADO_MOROSO: ESTADO_MOROSO,
         FECHA_COMPARENDO: FECHA_COMPARENDO,
+        FECHA_PAGO: FECHA_PAGO,
+        NRO_FACTURA: NRO_FACTURA,
         OBSERVACION:
           "usuario: " +
           usuario +
           " Envio una solicitud de actualizacion de  estado moroso del Comparendo No: " +
           NRO_COMPARENDO_MOROSO +
           " Con número de Factura: " +
-          factura +
+          NRO_FACTURA +
           " Con fecha de pago: " +
-          fecha_pago +
+          FECHA_PAGO +
           " Fecha de modificacion: " +
           formattedDate,
         ESTADO: 1,
@@ -189,9 +189,9 @@ function Tables() {
               " Modificó el estado moroso del Comparendo No: " +
               NRO_COMPARENDO_MOROSO +
               " Con número de Factura: " +
-              factura +
+              NRO_FACTURA +
               " Con fecha de pago: " +
-              fecha_pago +
+              FECHA_PAGO +
               " Fecha de modificacion: " +
               formattedDate;
 
@@ -265,11 +265,13 @@ function Tables() {
                   <tbody className="table-group-divider">
                     {post.map((item) => (
                       <tr key={item.id}>
-                        <td>{item.NRO_COMPARENDO_MOROSO}</td>
-                        <td>{item.ID_USUARIO_MOROSO}</td>
-                        <td className="table-secondary">{item.ESTADO_MOROSO}</td>
-                        <td>{item.FECHA}</td>
-                        <td>{item.OBSERVACION}</td>
+                        <td key={1}>{item.NRO_COMPARENDO_MOROSO}</td>
+                        <td key={2}>{item.ID_USUARIO_MOROSO}</td>
+                        <td key={3} className="table-secondary">
+                          {item.ESTADO_MOROSO}
+                        </td>
+                        <td key={4}>{item.FECHA}</td>
+                        <td key={5}>{item.OBSERVACION}</td>
 
                         <td>
                           {user === "admin" ? (
@@ -286,6 +288,7 @@ function Tables() {
                               className="btn btn-warning"
                               data-bs-toggle="modal"
                               data-bs-target="#modalEdit"
+                              name="btn_update"
                               disabled={item.ESTADO_MOROSO != "1" && item.ESTADO_MOROSO != "28"}
                             >
                               Editar
@@ -304,7 +307,8 @@ function Tables() {
                               data-bs-toggle="modal"
                               data-bs-target="#modalEdit"
                               className="btn btn-success"
-                              disabled={item.ESTADO_MOROSO === "3"}
+                              name="btn_solicitud"
+                              disabled={item.ESTADO_MOROSO != "1" && item.ESTADO_MOROSO != "28"}
                             >
                               Solicitar
                             </button>
@@ -405,7 +409,7 @@ function Tables() {
                           id="factura"
                           className="form-control"
                           placeholder="Numero Factura"
-                          value={factura}
+                          value={NRO_FACTURA}
                           onChange={(e) => setFactura(e.target.value)}
                         />
                       </div>
@@ -422,7 +426,7 @@ function Tables() {
                             type="date"
                             id="fecha"
                             className="form-control"
-                            value={fecha_pago}
+                            value={FECHA_PAGO}
                             onChange={handleDateChange}
                             max={minDate.toISOString().split("T")[0]}
                           />
@@ -478,6 +482,7 @@ function Tables() {
                           <button
                             onClick={() => handleButtonClick()}
                             className="btn btn-success"
+                            name="btn_updated"
                             disabled={check1 || check2}
                           >
                             Guardar Cambios
@@ -486,6 +491,7 @@ function Tables() {
                           <button
                             onClick={() => buttonnUser()}
                             className="btn btn-success"
+                            name="btn_pendiente"
                             disabled={check1 || check2}
                           >
                             Enviar
@@ -495,6 +501,7 @@ function Tables() {
                       <div className="modal-footer">
                         <button
                           type="button"
+                          name="btn_close"
                           id="btn_cerrar"
                           className="btn btn-secondary"
                           data-bs-dismiss="modal"
