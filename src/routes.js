@@ -75,6 +75,13 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Aclaratorios",
+    key: "aclaratorios",
+    icon: <Icon>document_scanner</Icon>,
+    route: "/aclaratorio",
+  },
+  {
+    type: "collapse",
     name: "Licencias Conduccion",
     key: "billing",
     icon: <Icon fontSize="small">recent_actors</Icon>,
