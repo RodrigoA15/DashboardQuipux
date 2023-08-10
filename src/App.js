@@ -50,7 +50,6 @@ import Dashboard from "layouts/dashboard";
 import Morosos from "layouts/morosos";
 import Lic_conduccion from "layouts/lic_conduccion";
 import Direcciones from "layouts/direcciones";
-import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
@@ -63,6 +62,7 @@ import brandDark from "assets/images/logo-ct-dark.png";
 import ProtectedAdmin from "components/ProtectedRoutes";
 import ProtectedUser from "components/ProtectedRoutes/user";
 import Solicitud from "layouts/solicitud";
+import Aclaratorios from "layouts/aclaratorios";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -182,7 +182,7 @@ export default function App() {
           <Route path="/tables" element={<Morosos />} />
           <Route path="/billing" element={<Lic_conduccion />} />
           <Route path="/notifications" element={<Direcciones />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/aclaratorio" element={<Aclaratorios />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/solicitud" element={<Solicitud />} />
         </Route>

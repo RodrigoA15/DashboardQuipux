@@ -40,7 +40,7 @@ import Dashboard from "layouts/dashboard";
 import Morosos from "layouts/morosos";
 import Lic_conduccion from "layouts/lic_conduccion";
 import Direcciones from "layouts/direcciones";
-import Profile from "layouts/profile";
+import Aclaratorios from "layouts/aclaratorios";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
 
@@ -77,8 +77,9 @@ const routes = [
     type: "collapse",
     name: "Aclaratorios",
     key: "aclaratorios",
-    icon: <Icon>document_scanner</Icon>,
+    icon: <Icon fontSize="small">document_scanner</Icon>,
     route: "/aclaratorio",
+    component: <Aclaratorios />,
   },
   {
     type: "collapse",
@@ -97,14 +98,7 @@ const routes = [
     route: "/notifications",
     component: <Direcciones />,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Profile",
-  //   key: "profile",
-  //   icon: <Icon fontSize="small">person</Icon>,
-  //   route: "/profile",
-  //   component: <Profile />,
-  // },
+
   {
     route: "/authentication/sign-in",
     component: <SignIn />,

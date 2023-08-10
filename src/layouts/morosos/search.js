@@ -5,7 +5,6 @@ import Icon from "@mui/material/Icon";
 import PropTypes from "prop-types";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
-import { DisabledByDefault } from "@mui/icons-material";
 
 function Search({ setpost }) {
   const [searchTerm, setSearchTerm] = useState("");
