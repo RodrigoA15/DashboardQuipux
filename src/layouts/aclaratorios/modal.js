@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useForm } from "react-hook-form";
+import { ErrorSharp } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -34,6 +35,7 @@ export default function BasicModal({ open, handleClose, rowData }) {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm();
 
   const onSubmit = handleSubmit((data) => {
@@ -124,7 +126,9 @@ export default function BasicModal({ open, handleClose, rowData }) {
                       },
                     })}
                   />
-                  {errors.nombre_usuario && <span>{errors.nombre_usuario.message}</span>}
+                  {errors.nombre_usuario && (
+                    <span className="inputForm">{errors.nombre_usuario.message}</span>
+                  )}
                 </div>
                 <div className="mb-3 col">
                   <label htmlFor="apellido_usuario" className="form-label">
@@ -142,7 +146,9 @@ export default function BasicModal({ open, handleClose, rowData }) {
                       },
                     })}
                   />
-                  {errors.apellido_usuario && <span>{errors.apellido_usuario.message}</span>}
+                  {errors.apellido_usuario && (
+                    <span className="inputForm">{errors.apellido_usuario.message}</span>
+                  )}
                 </div>
               </div>
               <div className="row">
@@ -162,7 +168,9 @@ export default function BasicModal({ open, handleClose, rowData }) {
                       },
                     })}
                   />
-                  {errors.fecha_comp && <span>{errors.fecha_comp.message}</span>}
+                  {errors.fecha_comp && (
+                    <span className="inputForm">{errors.fecha_comp.message}</span>
+                  )}
                 </div>
 
                 <div className="mb-3 col">
@@ -181,7 +189,9 @@ export default function BasicModal({ open, handleClose, rowData }) {
                       },
                     })}
                   />
-                  {errors.direccion && <span>{errors.direccion.message}</span>}
+                  {errors.direccion && (
+                    <span className="inputForm">{errors.direccion.message}</span>
+                  )}
                 </div>
               </div>
 
@@ -198,14 +208,16 @@ export default function BasicModal({ open, handleClose, rowData }) {
                     {...register("numero_placa", {
                       required: {
                         value: true,
-                        message: "Birthdate is required",
+                        message: "placa is required",
                       },
                     })}
                   />
-                  {errors.numero_placa && <span>{errors.numero_placa.message}</span>}
+                  {errors.numero_placa && (
+                    <span className="inputForm">{errors.numero_placa.message}</span>
+                  )}
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 col">
                   <label htmlFor="observacion" className="form-label">
                     Observacion Comparendo
                   </label>
@@ -216,15 +228,94 @@ export default function BasicModal({ open, handleClose, rowData }) {
                     value={rowData.OBSERVACIONES_COMPARENDO || "N/A"}
                     {...register("observacion", {
                       required: {
-                        value: true,
                         message: "Please enter your Name",
                       },
                     })}
                   />
-                  {errors.observacion && <span>{errors.observacion.message}</span>}
+                  {errors.observacion && (
+                    <span className="inputForm">{errors.observacion.message}</span>
+                  )}
                 </div>
               </div>
+              <Typography>Modificaciones</Typography>
 
+              <div className="row">
+                <div className="mb-3 col">
+                  <select
+                    className="form-select mt-4 mb-4 rounded-pill "
+                    aria-label="Default select example"
+                    {...register("modificacion", {
+                      required: {
+                        value: true,
+                        message: "Seleccion es required",
+                      },
+                    })}
+                  >
+                    <option disabled selected>
+                      Seleccione Tipo Modificacion
+                    </option>
+                    <option value="placa">Placa</option>
+                    <option value="numero_identificacion">Numero identificacion</option>
+                    <option value="tipo_infraccion">Tipo Infraccion</option>
+                  </select>
+
+                  {watch("modificacion") == "placa" && (
+                    <>
+                      <input
+                        type="text"
+                        placeholder="Numero_Placa"
+                        className="form-control rounded-pill"
+                        {...register("Numero_Placa", {
+                          required: {
+                            value: true,
+                            message: "Numero de placa es requerida",
+                          },
+                          minLength: {
+                            value: 5,
+                            message: "La placa debe tener al menos 5 caracteres",
+                          },
+
+                          maxLength: {
+                            value: 6,
+                            message: "La placa debe tener solo 6 caracteres",
+                          },
+                        })}
+                      />
+                      {errors.Numero_Placa && (
+                        <span className="inputForm">{errors.Numero_Placa.message}</span>
+                      )}
+                    </>
+                  )}
+
+                  {watch("modificacion") == "numero_identificacion" && (
+                    <>
+                      <input
+                        type="text"
+                        placeholder="numero_identificacion"
+                        className="form-control rounded-pill"
+                        {...register("numero_identificacion", {
+                          required: {
+                            value: true,
+                            message: "Numero de identificacion  es requerida",
+                          },
+                          minLength: {
+                            value: 8,
+                            message: "El numero de identificacion debe tener al menos 6 caracteres",
+                          },
+
+                          maxLength: {
+                            value: 10,
+                            message: "El numero de identificacion debe tener solo 10 caracteres",
+                          },
+                        })}
+                      />
+                      {errors.numero_identificacion && (
+                        <span className="inputForm">{errors.numero_identificacion.message}</span>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
               <button type="submit" className="btn btn-primary">
                 Submit
               </button>

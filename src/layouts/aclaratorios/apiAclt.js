@@ -41,7 +41,7 @@ function ApiAclaratorio() {
 
   const consumo = async () => {
     if (aclaratorio.trim() === "") {
-      show_alert("El termino busqueda no puede estar vacio");
+      show_alert("El termino busqueda no puede estar vacio", "warning");
       return;
     }
 
@@ -50,7 +50,7 @@ function ApiAclaratorio() {
       if (response.data.length > 0) {
         setData(response.data);
       } else {
-        show_alert("No se encontro el usuario");
+        show_alert("No se encontro el usuario", "error");
       }
     } catch (error) {
       console.log("Error: " + error);
