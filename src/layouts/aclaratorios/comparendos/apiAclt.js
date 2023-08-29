@@ -14,6 +14,7 @@ import { show_alert } from "functions";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ModalAclt from "./modal";
 import BasicModal from "./modal";
+import { Toaster, toast } from "sonner";
 
 const { useState } = require("react");
 
@@ -41,7 +42,7 @@ function ApiAclaratorio() {
 
   const consumo = async () => {
     if (aclaratorio.trim() === "") {
-      show_alert("El termino busqueda no puede estar vacio", "warning");
+      show_alert("El término de búsqueda no puede estar vacío", "warning");
       return;
     }
 
@@ -50,16 +51,23 @@ function ApiAclaratorio() {
       if (response.data.length > 0) {
         setData(response.data);
       } else {
-        show_alert("No se encontro el usuario", "error");
+        show_alert("No se encontró el usuario", "error");
       }
     } catch (error) {
       console.log("Error: " + error);
-      show_alert("Error de server");
+      if (error.response && error.response.status === 404) {
+        toast.error("No se encontro el usuario", {
+          //icon: <Icon>person</Icon>,
+        });
+      } else {
+        toast.error("Error de servidor");
+      }
     }
   };
 
   return (
     <div>
+      <Toaster position="top-center" richColors expand={true} offset="80px" />
       <div className="containerInput">
         <input
           className="form-control inputBuscar"

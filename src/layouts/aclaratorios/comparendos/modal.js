@@ -1,22 +1,8 @@
-import {
-  Button,
-  Container,
-  FormControl,
-  FormHelperText,
-  Icon,
-  IconButton,
-  Input,
-  InputLabel,
-  TextField,
-} from "@mui/material";
-import { useState } from "react";
 import PropTypes from "prop-types";
-
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useForm } from "react-hook-form";
-import { ErrorSharp } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -42,6 +28,8 @@ export default function BasicModal({ open, handleClose, rowData }) {
     console.log(data);
     reset();
   });
+
+  console.log(rowData);
   return (
     <div>
       <Modal

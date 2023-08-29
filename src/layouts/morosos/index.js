@@ -30,6 +30,7 @@ function Tables() {
   const [check1, setCheck1] = useState(true);
   const [check2, setCheck2] = useState(true);
   const [formattedDate, setFormattedDate] = useState("");
+  console.log(NRO_FACTURA);
 
   const textareaRef = useRef(null);
   const currentDate = new Date();
@@ -200,12 +201,9 @@ function Tables() {
               ESTADO_MOROSO: ESTADO_MOROSO,
               OBSERVACION: updatedObservacion,
             };
-            const sapa = axios.put(
-              `http://127.0.0.1:3500/api/compa/${NRO_COMPARENDO_MOROSO}`,
-              data
-            );
+            const api = axios.put(`http://127.0.0.1:3500/api/compa/${NRO_COMPARENDO_MOROSO}`, data);
+            console.log(api);
             console.log("siuaaaaaaaaaaaa", setOBSERVACION);
-            console.log(sapa);
             MySwal.fire({
               title: "Estado Actualizado correctamente",
               icon: "success",
