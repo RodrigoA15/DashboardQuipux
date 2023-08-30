@@ -3,6 +3,9 @@ import axios from "axios";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Toaster, toast } from "sonner";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const style = {
   position: "absolute",
@@ -19,6 +22,8 @@ function ModalAclt({ open, handleClose, data }) {
   const [agentes, setAgentes] = useState([]);
   const [selectAgente, setSelectAgente] = useState("");
   const [nroAclaratorio, setNroAclaratorio] = useState("");
+  const [motivo, setMotivo] = useState("");
+  const [fechaAclt, setFechaAclt] = useState("");
   useEffect(() => {
     agentesTTO();
   }, []);
@@ -39,8 +44,50 @@ function ModalAclt({ open, handleClose, data }) {
     setAgentes(response.data);
   };
 
-  const hola = "Hola " + nroAclaratorio;
-  console.log(hola);
+  const descripcion =
+    "Aclaratorio numero " +
+    nroAclaratorio +
+    " Por " +
+    motivo +
+    " Por parte del agente " +
+    selectAgente +
+    " fecha Aclaratorio " +
+    fechaAclt;
+  console.log(descripcion);
+
+  const consumoApiput = async (CONSECUTIVO_MODIFICACION, DESCRIPCION_MODIFICACION) => {
+    const MySwal = withReactContent(Swal);
+    try {
+      const alerta = await MySwal.fire({
+        title: "Esta seguro de actualizar?",
+        text: "Actualizar a estado Aclaratorio",
+        icon: "warning",
+        customClass: {
+          container: "swal-zindex",
+        },
+        showCancelButton: true,
+        confirmButtonText: "Si actualizar",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (alerta.isConfirmed) {
+        await axios.put(`http://localhost:3500/api/pendienteAclt/${CONSECUTIVO_MODIFICACION}`, {
+          DESCRIPCION_MODIFICACION: descripcion + "RLMFDS",
+        });
+        toast.success("Actualizado Correctamente");
+      }
+    } catch (error) {
+      await MySwal.fire({
+        title: "No se pudo realizar la actualizacion",
+        text: "error de servidor",
+        icon: "error",
+        customClass: {
+          container: "swal-zindex",
+        },
+      });
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -64,11 +111,9 @@ function ModalAclt({ open, handleClose, data }) {
                     aria-label="Default select example"
                     onChange={(e) => setSelectAgente(e.target.value)}
                   >
-                    <option disabled selected>
-                      Seleccione un agente
-                    </option>
+                    <option disabled>Seleccione un agente</option>
                     {agentes.map((ag) => (
-                      <option key={ag.id} value={ag.value}>
+                      <option key={ag.ID_AGENTE} value={ag.value}>
                         {ag.NOMBRES} {ag.APELLIDOS}
                       </option>
                     ))}
@@ -80,10 +125,10 @@ function ModalAclt({ open, handleClose, data }) {
                   <select
                     className="form-select mb-4 rounded-pill "
                     aria-label="Default select example"
+                    onChange={(e) => setMotivo(e.target.value)}
+                    value={motivo}
                   >
-                    <option disabled selected>
-                      Seleccione motivo de modificacion
-                    </option>
+                    <option disabled>Seleccione motivo de modificacion</option>
                     <option value="numero_identificacion">Numero Identificacion</option>
                     <option value="tipo_infraccion">Tipo Infraccion</option>
                     <option value="placa">Placa</option>
@@ -97,10 +142,10 @@ function ModalAclt({ open, handleClose, data }) {
                     Numero Aclaratorio
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     className="form-control rounded-pill"
                     id="nroAclaratorio"
-                    value={nroAclaratorio}
+                    // value={nroAclaratorio}
                     onChange={(e) => setNroAclaratorio(e.target.value)}
                   />
                 </div>
@@ -112,6 +157,7 @@ function ModalAclt({ open, handleClose, data }) {
                     type="date"
                     className="form-control rounded-pill"
                     id="DESCRIPCION_MODIFICACION"
+                    onChange={(e) => setFechaAclt(e.target.value)}
                   />
                 </div>
               </div>
@@ -125,13 +171,18 @@ function ModalAclt({ open, handleClose, data }) {
                     className="form-control"
                     id="observacion"
                     value={data.DESCRIPCION_MODIFICACION || "N/A"}
+                    readOnly
                   />
                   {errors.DESCRIPCION_MODIFICACION && (
                     <span className="inputForm">{errors.DESCRIPCION_MODIFICACION.message}</span>
                   )}
                 </div>
               </div>
-              <button type="submit" className="btn btn-primary">
+              <button
+                type="submit"
+                className="btn btn-primary"
+                onClick={() => consumoApiput(data.CONSECUTIVO_MODIFICACION)}
+              >
                 Submit
               </button>
             </form>
@@ -147,5 +198,5 @@ export default ModalAclt;
 ModalAclt.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
+  data: PropTypes.object,
 };

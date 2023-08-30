@@ -21,5 +21,5 @@ export default function ProtectedAdmin({ children }) {
 }
 
 ProtectedAdmin.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };

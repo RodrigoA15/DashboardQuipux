@@ -28,7 +28,7 @@ function PendienteAclt() {
       if (pendientes.data.length > 0) return setPendienteAclt(pendientes.data);
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        toast.error("No se encontro el usuario", {});
+        toast.error("No se encontro el usuarioSSSS");
       } else {
         toast.error("Error de servidor");
       }

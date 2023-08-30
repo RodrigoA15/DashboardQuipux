@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Card, CardActionArea, CardContent, Divider, Grid } from "@mui/material";
 import MDBox from "components/MDBox";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
@@ -10,6 +10,7 @@ import { Doughnut } from "react-chartjs-2";
 import axios from "axios";
 import moment from "moment";
 import "moment/locale/es";
+import GraficaActividadAclt from "./graficaActividadAclt";
 
 const Grafica = () => {
   const [data, setData] = useState([]);
@@ -41,20 +42,22 @@ const Grafica = () => {
   };
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
-          <MDBox mt={4}>
+    <div>
+      <Card sx={{ maxWidth: 545 }}>
+        <CardActionArea>
+          <CardContent>
             {chartData.labels && chartData.datasets ? (
               <Line data={chartData} />
             ) : (
               <h1>Cargando...</h1>
             )}
-          </MDBox>
-        </Grid>
-      </Grid>
-    </DashboardLayout>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+      <div className="mt-5">
+        <GraficaActividadAclt />
+      </div>
+    </div>
   );
 };
 

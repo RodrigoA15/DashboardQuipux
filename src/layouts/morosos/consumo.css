@@ -74,3 +74,7 @@ table {
   color: tomato;
   font-style: x-small;
 }
+
+.swal-zindex {
+  z-index: 10000; /* You can adjust this value as needed */
+}

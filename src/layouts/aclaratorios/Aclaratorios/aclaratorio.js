@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Toaster, toast } from "sonner";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import ModalAclt from "./modalAclt";
+
 function Aclaratorio() {
   const [data, setData] = useState([]);
   const [consecutivo, setCosecutivo] = useState("");
@@ -44,6 +45,7 @@ function Aclaratorio() {
       }
     }
   };
+
   return (
     <div>
       <Toaster position="top-right" richColors expand={true} offset="80px" />
