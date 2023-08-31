@@ -36,6 +36,7 @@ function ModalAclt({ open, handleClose, data }) {
   } = useForm();
 
   const onSubmit = handleSubmit(() => {
+    consumoApiput(data.CONSECUTIVO_MODIFICACION);
     reset();
   });
 
@@ -147,7 +148,16 @@ function ModalAclt({ open, handleClose, data }) {
                     id="nroAclaratorio"
                     // value={nroAclaratorio}
                     onChange={(e) => setNroAclaratorio(e.target.value)}
+                    {...register("nroAclaratorio", {
+                      required: {
+                        value: true,
+                        message: "Numero Aclaratorio es obligatoria",
+                      },
+                    })}
                   />
+                  {errors.nroAclaratorio && (
+                    <span className="inputForm ">{errors.nroAclaratorio.message}</span>
+                  )}
                 </div>
                 <div className="mb-3 col">
                   <label htmlFor="DESCRIPCION_MODIFICACION" className="form-label">
@@ -158,7 +168,16 @@ function ModalAclt({ open, handleClose, data }) {
                     className="form-control rounded-pill"
                     id="DESCRIPCION_MODIFICACION"
                     onChange={(e) => setFechaAclt(e.target.value)}
+                    {...register("fecha_aclaratorio", {
+                      required: {
+                        value: true,
+                        message: "fecha es obligatoria",
+                      },
+                    })}
                   />
+                  {errors.fecha_aclaratorio && (
+                    <span className="inputForm ">{errors.fecha_aclaratorio.message}</span>
+                  )}
                 </div>
               </div>
               <div className="row">
@@ -178,11 +197,7 @@ function ModalAclt({ open, handleClose, data }) {
                   )}
                 </div>
               </div>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={() => consumoApiput(data.CONSECUTIVO_MODIFICACION)}
-              >
+              <button type="submit" className="btn btn-primary">
                 Submit
               </button>
             </form>

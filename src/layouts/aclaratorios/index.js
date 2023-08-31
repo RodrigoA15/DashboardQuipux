@@ -42,16 +42,16 @@ function Aclaratorios() {
                   <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                       <Tab label="Pendientes" value="1" />
-                      {/* <Tab label="Modificar Comparendo" value="2" /> */}
+                      <Tab label="Modificar Comparendo" value="2" />
                       <Tab label="Aclaratorio" value="3" />
                     </TabList>
                   </Box>
                   <TabPanel value="1">
                     <PendienteAclt />
                   </TabPanel>
-                  {/* <TabPanel value="2">
+                  <TabPanel value="2">
                     <ApiAclaratorio />
-                  </TabPanel> */}
+                  </TabPanel>
                   <TabPanel value="3">
                     <Aclaratorio />
                   </TabPanel>

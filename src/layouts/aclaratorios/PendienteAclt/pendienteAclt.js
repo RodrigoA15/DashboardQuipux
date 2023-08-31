@@ -25,12 +25,16 @@ function PendienteAclt() {
         `http://localhost:3500/api/pendienteAclt/${handleInputChange}`
       );
       console.log(pendientes);
-      if (pendientes.data.length > 0) return setPendienteAclt(pendientes.data);
+      if (pendientes.data.length > 0) {
+        setPendienteAclt(pendientes.data);
+      } else if (pendientes.data.message[0] === "Este comparendo ya tiene un aclaratorio") {
+        toast.error("Este comparendo ya tiene un aclaratorio");
+      }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        toast.error("No se encontro el usuarioSSSS");
+        toast.error("No se encontro el comparendo");
       } else {
-        toast.error("Error de servidor");
+        toast.error("error de servidor");
       }
     }
   };
@@ -49,8 +53,7 @@ function PendienteAclt() {
 
       if (alerta.isConfirmed) {
         await axios.put(`http://localhost:3500/api/pendienteAclt/${CONSECUTIVO_MODIFICACION}`, {
-          DESCRIPCION_MODIFICACION:
-            DESCRIPCION_MODIFICACION + "  PENDIENTE ACLARATORIO " + "RLMFDS",
+          DESCRIPCION_MODIFICACION: " PENDIENTE ACLARATORIO " + "RAPLMFDS",
         });
         toast.success("Actualizado Correctamente");
       }
